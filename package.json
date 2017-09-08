@@ -1,0 +1,19 @@
+{
+  "name": "bcm",
+  "version": "1.0.0",
+  "description": "bcm site with admin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/criggs626/BCM.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/criggs626/BCM/issues"
+  },
+  "homepage": "https://github.com/criggs626/BCM#readme"
+}
