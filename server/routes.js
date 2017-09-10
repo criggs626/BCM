@@ -16,7 +16,7 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
     });
 
     app.use('/home', isLoggedIn,function(req, res) {
-      send(res, "index.html");
+      send(res, "home.html");
     });
 
     //handle login event

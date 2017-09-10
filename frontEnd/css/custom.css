@@ -43,6 +43,14 @@ div.content{
     text-align: center;
     box-shadow: inset 0px 0px 0px 2px rgba(73,47,146,.7);
 }
+div.contentAuto{
+    background-color: #FFF;
+    border: 15px solid #e5e5e5;
+    padding: 20px;
+    height: auto;
+    text-align: center;
+    box-shadow: inset 0px 0px 0px 2px rgba(73,47,146,.7);
+}
 div.section{
     margin-bottom: 30px;
 }
@@ -84,7 +92,7 @@ body{
 }
 @media (max-width:950px){
     div.jumbotron{
-        background-position-y: 0px;     
+        background-position-y: 0px;
         height:auto;
     }
     div.container{
@@ -100,4 +108,3 @@ body{
 }
 //dark #36236b
 //light #492f92
-
