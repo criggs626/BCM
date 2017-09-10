@@ -16,6 +16,28 @@ $(window).resize(function () {
     }
 });
 
+$.get("/getMembers",function(data){
+  $("#directorName").text(data.director.name);
+  $("#directorContact").text(data.director.email);
+  $("#directorContact").attr("href","mailto:"+data.director.email);
+
+  $("#presidentName").text(data.president.name);
+  $("#presidentContact").text(data.president.email);
+  $("#presidentContact").attr("href","mailto:"+data.president.email);
+
+  $("#vpName").text(data.vp.name);
+  $("#vpContact").text(data.vp.email);
+  $("#vpContact").attr("href","mailto:"+data.vp.email);
+
+  $("#secrataryName").text(data.secratary.name);
+  $("#secrataryContact").text(data.secratary.email);
+  $("#secrataryContact").attr("href","mailto:"+data.secratary.email);
+
+  $("#treasurerName").text(data.treasurer.name);
+  $("#treasurerContact").text(data.treasurer.email);
+  $("#treasurerContact").attr("href","mailto:"+data.treasurer.email);
+});
+
 var routes = Backbone.Router.extend({
     routes: {
         "contact": "contact",

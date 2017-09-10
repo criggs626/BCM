@@ -19,6 +19,20 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
       send(res, "home.html");
     });
 
+    app.get('/getMembers',function(req, res) {
+      MongoClient.connect(url,function(err,db){
+          var board=db.collection("board");
+          board.find().toArray(function(err,item){
+            if(err){
+              console.err(err);
+              res.send("error: check logs");
+            }
+            db.close();
+            res.json(item[0]);
+        });
+      });
+    });
+
     //handle login event
     app.post('/login', passport.authenticate('local-login', {
       successRedirect: '/home', // redirect to the secure profile section
