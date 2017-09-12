@@ -5,6 +5,7 @@ Created By: Caleb Riggs
 
 const DEBUG = true;
 var fs = require('fs');
+var multer=require('multer');
 //establish the frontEnd director structure
 
 const ROOT_DIR = "../frontEnd/";
@@ -22,10 +23,10 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
       send(res, "home.html");
     });
 
-    app.post('/updatePicture',upload.single('file'), isLoggedIn,function(req, res) {
-      var validIn="header1,header2,header3,header4,header5,group,ist,logo";
+    app.post('/updatePicture',multer({ dest: './uploads/'}).single('upl'), isLoggedIn,function(req, res) {
+      var validIn="header1.jpg,header2.jpg,header3.jpg,header4.jpg,header5.jpg,group.jpg,ist.jpg,logo.png";
       if(validIn.includes(req.body.picID)){
-        fs.rename(req.file.path, "../frontEnd/img/test.jpg", function (err) {
+        fs.rename(req.file.path, "../frontEnd/img/"+req.body.picID, function (err) {
           if (err){
             console.error(err);
             res.send("error: issue uploading file");
