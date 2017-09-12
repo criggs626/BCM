@@ -40,6 +40,35 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
       }
     });
 
+    app.post('/updateLeader',multer({ dest: './uploads/'}).single('upl'), isLoggedIn,function(req, res) {
+      try{
+        newFile=req.file.path;
+        fs.rename(newFile, "../frontEnd/img/"+req.body.person+".jpg", function (err) {
+          if (err){
+            console.error(err);
+          }
+          if(req.body.name!=""){
+
+          }
+          if(req.body.email!=""){
+            
+          }
+        });
+      }
+      catch(e){
+
+      }
+
+
+      if(validIn.includes(req.body.picID)){
+
+      }
+      else{
+        console.error("Invalid Input");
+        res.send("error: invalid input");
+      }
+    });
+
     app.get('/getMembers',function(req, res) {
       MongoClient.connect(url,function(err,db){
           var board=db.collection("board");

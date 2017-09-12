@@ -49,7 +49,7 @@
               <form style="margin-top:10px;" action="/updatePicture" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="picID" value="header1.jpg">
                 <input type="file" name="upl">
-                <button class="btn btn-success">Upload New File</button>
+                <input type="submit" class="btn btn-success" value="Update">
               </form>
             </div>
             <div class="col-md-4 contentAuto">
@@ -58,7 +58,7 @@
               <form style="margin-top:10px;" action="/updatePicture" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="picID" value="header2.jpg">
                 <input type="file" name="upl">
-                <button class="btn btn-success">Upload New File</button>
+                <input type="submit" class="btn btn-success" value="Update">
               </form>
             </div>
             <div class="col-md-4 contentAuto">
@@ -67,7 +67,7 @@
               <form style="margin-top:10px;" action="/updatePicture" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="picID" value="header3.jpg">
                 <input type="file" name="upl">
-                <button class="btn btn-success">Upload New File</button>
+                <input type="submit" class="btn btn-success" value="Update">
               </form>
             </div>
           </div>
@@ -78,7 +78,7 @@
               <form style="margin-top:10px;" action="/updatePicture" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="picID" value="header4.jpg">
                 <input type="file" name="upl">
-                <button class="btn btn-success">Upload New File</button>
+                <input type="submit" class="btn btn-success" value="Update">
               </form>
             </div>
             <div class="col-md-4 contentAuto">
@@ -87,7 +87,7 @@
               <form style="margin-top:10px;" action="/updatePicture" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="picID" value="header5.jpg">
                 <input type="file" name="upl">
-                <button class="btn btn-success">Upload New File</button>
+                <input type="submit" class="btn btn-success" value="Update">
               </form>
             </div>
           </div>
@@ -99,7 +99,7 @@
               <form style="margin-top:10px;" action="/updatePicture" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="picID" value="group.jpg">
                 <input type="file" name="upl">
-                <button class="btn btn-success">Upload New File</button>
+                <input type="submit" class="btn btn-success" value="Update">
               </form>
             </div>
             <div class="col-md-4 contentAuto">
@@ -108,7 +108,7 @@
               <form style="margin-top:10px;" action="/updatePicture" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="picID" value="ist.jpg">
                 <input type="file" name="upl">
-                <button class="btn btn-success">Upload New File</button>
+                <input type="submit" class="btn btn-success" value="Update">
               </form>
             </div>
             <div class="col-md-4 contentAuto">
@@ -117,14 +117,74 @@
               <form style="margin-top:10px;" action="/updatePicture" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="picID" value="logo.png">
                 <input type="file" name="upl">
-                <button class="btn btn-success">Upload New File</button>
+                <input type="submit" class="btn btn-success" value="Update">
               </form>
             </div>
           </div>
         </div>
 
         <!-- Leadership Control -->
-
+        <div class="container-fluid section" id="leadership">
+          <div class="row">
+            <div class="col-md-6 contentAuto">
+              <h2>Director</h2><hr>
+              <img src="img/director.jpg" height="150px">
+              <form style="margin-top:10px;" action="/updateLeader" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="person" value="director">
+                <input type="file" name="upl">
+                <input type="text" class="form-control" id="directorName" name="name">
+                <input type="text" class="form-control" id="directorEmail" name="email">
+                <input type="submit" class="btn btn-success" value="Update">
+              </form>
+            </div>
+            <div class="col-md-6 contentAuto">
+              <h2>President</h2><hr>
+              <img src="img/president.jpg" height="150px">
+              <form style="margin-top:10px;" action="/updateLeader" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="person" value="president">
+                <input type="file" name="upl">
+                <input type="text" class="form-control" id="presidentName" name="name">
+                <input type="text" class="form-control" id="presidentEmail" name="email">
+                <input type="submit" class="btn btn-success" value="Update">
+              </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 contentAuto">
+              <h2>Vice President</h2><hr>
+              <img src="img/viceP.jpg" height="150px">
+              <form style="margin-top:10px;" action="/updateLeader" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="person" value="vp">
+                <input type="file" name="upl">
+                <input type="text" class="form-control" id="vpName" name="name">
+                <input type="text" class="form-control" id="vpEmail" name="email">
+                <input type="submit" class="btn btn-success" value="Update">
+              </form>
+            </div>
+            <div class="col-md-4 contentAuto">
+              <h2>Secratary</h2><hr>
+              <img src="img/secratary.jpg" height="150px">
+              <form style="margin-top:10px;" action="/updateLeader" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="person" value="secratary">
+                <input type="file" name="upl">
+                <input type="text" class="form-control" id="secrataryName" name="name">
+                <input type="text" class="form-control" id="secrataryEmail" name="email">
+                <input type="submit" class="btn btn-success" value="Update">
+              </form>
+            </div>
+            <div class="col-md-4 contentAuto">
+              <h2>Treasurer</h2><hr>
+              <img src="img/treasurer.jpg" height="150px">
+              <form style="margin-top:10px;" action="/updateLeader" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="person" value="treasurer">
+                <input type="file" name="upl">
+                <input type="text" class="form-control" id="treasurerName" name="name">
+                <input type="text" class="form-control" id="treasurerEmail" name="email">
+                <input type="submit" class="btn btn-success" value="Update">
+              </form>
+            </div>
+          </div>
+        </div>
 
         <!-- Questions -->
 
