@@ -3,7 +3,7 @@ to update the database.
 Created By: Caleb Riggs
 */
 
-const DEBUG = true;
+const DEBUG = false;
 var fs = require('fs');
 var multer=require('multer');
 //establish the frontEnd director structure
@@ -47,26 +47,55 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
           if (err){
             console.error(err);
           }
+          var temp={};
+          temp[req.body.person]={};
           if(req.body.name!=""){
-
+            temp[req.body.person]["name"]=req.body.name;
           }
           if(req.body.email!=""){
-            
+            temp[req.body.person]["email"]=req.body.email;
           }
+          var id=new mongo.ObjectID("59b889f2632f7d09ea43d59b");
+          MongoClient.connect(url,function(err,db){
+            var collection=db.collection("board");
+            //Update user with new information
+            collection.update({_id:id },{$set:temp}, function (err, item) {
+              console.log("Updated user info");
+            });
+            db.close();
+            res.send("Success");
+          });
         });
       }
       catch(e){
-
+        var temp={};
+        temp[req.body.person]={};
+        if(req.body.name!=""){
+          temp[req.body.person]["name"]=req.body.name;
+        }
+        if(req.body.email!=""){
+          temp[req.body.person]["email"]=req.body.email;
+        }
+        var id=new mongo.ObjectID("59b5b9014fd9502b0647f163");
+        MongoClient.connect(url,function(err,db){
+          var collection=db.collection("board");
+          //Update user with new information
+          collection.update({_id:id },{$set:temp}, function (err, item) {
+            console.log("Updated user info");
+          });
+          db.close();
+          res.send("Success");
+        });
       }
 
 
-      if(validIn.includes(req.body.picID)){
+/*      if(validIn.includes(req.body.picID)){
 
       }
       else{
         console.error("Invalid Input");
         res.send("error: invalid input");
-      }
+      }*/
     });
 
     app.get('/getMembers',function(req, res) {

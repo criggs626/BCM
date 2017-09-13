@@ -18,20 +18,20 @@ $("form").submit(function(e){
 });
 
 $.get("/getMembers",function(data){
-  $("#directorName").attr("placeholder",data.director.name);
-  $("#directorEmail").attr("placeholder",data.director.email);
+  $("#directorName").val(data.director.name);
+  $("#directorEmail").val(data.director.email);
 
-  $("#presidentName").attr("placeholder",data.president.name);
-  $("#presidentEmail").attr("placeholder",data.president.email);
+  $("#presidentName").val(data.president.name);
+  $("#presidentEmail").val(data.president.email);
 
-  $("#vpName").attr("placeholder",data.vp.name);
-  $("#vpEmail").attr("placeholder",data.vp.email);
+  $("#vpName").val(data.vp.name);
+  $("#vpEmail").val(data.vp.email);
 
-  $("#secrataryName").attr("placeholder",data.secratary.name);
-  $("#secrataryEmail").attr("placeholder",data.secratary.email);
+  $("#secrataryName").val(data.secratary.name);
+  $("#secrataryEmail").val(data.secratary.email);
 
-  $("#treasurerName").attr("placeholder",data.treasurer.name);
-  $("#treasurerEmail").attr("placeholder",data.treasurer.email);
+  $("#treasurerName").val(data.treasurer.name);
+  $("#treasurerEmail").val(data.treasurer.email);
 });
 
 var routes = Backbone.Router.extend({
