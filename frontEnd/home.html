@@ -187,7 +187,36 @@
         </div>
 
         <!-- Questions -->
+        <div class="container-fluid section" id="questions">
+          <div class="row">
+            <div class="col-md-12 contentAuto">
+              <h2>Question Managment</h2>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 contentAuto">
+              <h2>Questions</h2><h5>Enter the questions below</h5><hr>
+              <table id="questionTable" class="table">
+                <tr><td><textarea class="form-control questionText" placeholder="Enter question here"></textarea></td><td><button class="btn btn-danger">X</button></td></tr>
+              </table>
+              <button class="btn btn-primary" onclick="addOption('#questionTable','questionText')">Add Questions</button>
+            </div>
+            <div class="col-md-6 contentAuto">
+              <h2>Groups</h2><h5>Enter the leader names below</h5><hr>
+              <table id="groupTable" class="table">
+                <tr><td><input type="text" class="form-control groupText" placeholder="Enter leader name here"></td><td><button class="btn btn-danger">X</button></td></tr>
+              </table>
+              <button class="btn btn-primary" onclick="addOption('#groupTable','groupText')">Add Group</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 contentAuto">
+              <button class="btn btn-danger" style="margin-right:50px;">Cancel</button>
+              <button class="btn btn-success" onclick="startDiscussions();">Go Live</button>
+            </div>
+          </div>
 
+        </div>
         <script src="js/home.js"></script>
     </body>
 </html>

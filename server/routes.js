@@ -3,7 +3,7 @@ to update the database.
 Created By: Caleb Riggs
 */
 
-const DEBUG = false;
+const DEBUG = true;
 var fs = require('fs');
 var multer=require('multer');
 //establish the frontEnd director structure

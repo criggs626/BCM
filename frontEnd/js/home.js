@@ -34,6 +34,39 @@ $.get("/getMembers",function(data){
   $("#treasurerEmail").val(data.treasurer.email);
 });
 
+function addOption(tableID,name){
+  if(name=="questionText"){
+    $(tableID).append("<tr><td><textarea class=\"form-control "+name+"\" placeholder=\"Enter question Here\"></textarea></td><td><button class=\"btn btn-danger\">X</button></td></tr>")
+  }
+  else{
+    $(tableID).append("<tr><td><input type=\"text\" class=\"form-control "+name+"\" placeholder=\"Enter leader name Here\"></td><td><button class=\"btn btn-danger\">X</button></td></tr>")
+  }
+}
+
+function startDiscussions(){
+  var temp={};
+  var questions=[];
+  var groups=[];
+  $(".questionText").each(function(){
+    if($(this).val()!=""){
+      questions.push($(this).val());
+    }
+  });
+  $(".groupText").each(function(){
+    if($(this).val()!=""){
+      groups.push($(this).val());
+    }
+  });
+  temp["questions"]=questions;
+  temp["groups"]=groups;
+  temp["number"]=groups.length;
+  console.log(temp);
+}
+
+$('table').on('click', 'button', function(e){
+   $(this).closest('tr').remove()
+});
+
 var routes = Backbone.Router.extend({
     routes: {
         "images": "header",
