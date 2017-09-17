@@ -60,7 +60,11 @@ function startDiscussions(){
   temp["questions"]=questions;
   temp["groups"]=groups;
   temp["number"]=groups.length;
+  temp["current"]=true;
   console.log(temp);
+  $.post("/startDiscussions",{"values":temp},function(data){
+    alert(data);
+  });
 }
 
 $('table').on('click', 'button', function(e){

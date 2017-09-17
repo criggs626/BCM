@@ -6,6 +6,7 @@ Created By: Caleb Riggs
 const DEBUG = true;
 var fs = require('fs');
 var multer=require('multer');
+var globVar={groups:0,students:0,active:false};
 //establish the frontEnd director structure
 
 const ROOT_DIR = "../frontEnd/";
@@ -21,6 +22,29 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
 
     app.use('/home', isLoggedIn,function(req, res) {
       send(res, "home.html");
+    });
+
+    app.get('/getDiscussionStatus',function(req, res) {
+      res.send(globVar.active);
+    });
+
+    app.get('/joinDiscussionGroup',function(req, res) {
+      var groupNumber=(globVar.students%globVar.groups);
+      globVar.students+=1;
+      MongoClient.connect(url,function(err,db){
+        var collection=db.collection("discussion");
+        collection.find({"current":"true"}).toArray(function(err,item){
+          if(err){
+            console.err(err);
+            res.send("error: check logs");
+          }
+          db.close();
+          var temp=item[0];
+          delete temp._id;
+          temp["groupNumber"]=groupNumber;
+          res.json(temp);
+        });
+      });
     });
 
     app.post('/updatePicture',multer({ dest: './uploads/'}).single('upl'), isLoggedIn,function(req, res) {
@@ -40,6 +64,29 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
       }
     });
 
+    app.post('/startDiscussions', isLoggedIn,function(req, res) {
+      globVar.groups=req.body.values.number;
+      globVar.students=0;
+      globVar.active=true;
+      MongoClient.connect(url,function(err,db){
+        var collection=db.collection("discussion");
+        collection.update({"current":"true" },{$set:{"current":"false"}}, function (err, item) {
+          console.log("Begin updating dsicussion info");
+          collection.insertOne(req.body.values,function(err,result){
+            if(err){
+              console.error(err);
+              db.close();
+              res.send("error");
+            }
+            else{
+              db.close();
+              res.send("success");
+            }
+          });
+        });
+      });
+    });
+
     app.post('/updateLeader',multer({ dest: './uploads/'}).single('upl'), isLoggedIn,function(req, res) {
       try{
         newFile=req.file.path;
@@ -55,11 +102,10 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
           if(req.body.email!=""){
             temp[req.body.person]["email"]=req.body.email;
           }
-          var id=new mongo.ObjectID("59b5b9014fd9502b0647f163");
           MongoClient.connect(url,function(err,db){
             var collection=db.collection("board");
             //Update user with new information
-            collection.update({_id:id },{$set:temp}, function (err, item) {
+            collection.update({"status":"current" },{$set:temp}, function (err, item) {
               console.log("Updated user info");
             });
             db.close();
@@ -76,26 +122,16 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
         if(req.body.email!=""){
           temp[req.body.person]["email"]=req.body.email;
         }
-        var id=new mongo.ObjectID("59b5b9014fd9502b0647f163");
         MongoClient.connect(url,function(err,db){
           var collection=db.collection("board");
           //Update user with new information
-          collection.update({_id:id },{$set:temp}, function (err, item) {
+          collection.update({"status":"current" },{$set:temp}, function (err, item) {
             console.log("Updated user info");
           });
           db.close();
           res.send("Success");
         });
       }
-
-
-/*      if(validIn.includes(req.body.picID)){
-
-      }
-      else{
-        console.error("Invalid Input");
-        res.send("error: invalid input");
-      }*/
     });
 
     app.get('/getMembers',function(req, res) {

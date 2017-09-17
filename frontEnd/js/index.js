@@ -16,6 +16,24 @@ $(window).resize(function () {
     }
 });
 
+$.get("/getDiscussionStatus",function(data){
+  if(data){
+    $("#discussionMessage").text("Click below to receive your group number and questions");
+    $("#discussionButton").removeClass("disabled");
+  }
+});
+
+$("#discussionButton").click(function(){
+  $.get("/joinDiscussionGroup",function(data){
+    console.log(data);
+    var display="<div class=\"row\"><div class=\"col-md-12 contentAuto\"><h1>Group #"+(data.groupNumber+1)+"</h1><hr><h3>"+data.groups[parseInt(data.groupNumber)]+"</h3></div></div>";
+    for(i=0;i<data.questions.length;i++){
+      display+="<div class=\"row\"><div class=\"col-md-12 contentAuto\"><h2>Question #"+(i+1)+"</h2><hr>"+data.questions[i]+"</div></div>";
+    }
+    $("#discussionGroups").html(display);
+  })
+});
+
 $.get("/getMembers",function(data){
   $("#directorName").text(data.director.name);
   $("#directorContact").text(data.director.email);
@@ -42,22 +60,32 @@ var routes = Backbone.Router.extend({
     routes: {
         "contact": "contact",
         "webmaster": "webmaster",
+        "discussion":"discussion",
         '': 'home'
     },
     contact: function () {
         $('#main').hide();
         $('#webMaster').hide();
         $('#contact').show();
+        $('#discussionGroups').hide();
     },
     webmaster: function () {
         $('#main').hide();
         $('#contact').hide();
         $('#webMaster').show();
+        $('#discussionGroups').hide();
+    },
+    discussion: function () {
+        $('#main').hide();
+        $('#contact').hide();
+        $('#webMaster').hide();
+        $('#discussionGroups').show();
     },
     home: function (data) {
         $('#main').show();
         $('#contact').hide();
         $('#webMaster').hide();
+        $('#discussionGroups').hide();
     }
 });
 var appRoutes = new routes();
