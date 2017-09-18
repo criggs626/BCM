@@ -25,16 +25,26 @@
         <div class="container-fluid section" id="main">
           <div class="row">
             <div class="col-md-4 content">
-              <h1>Page Views this month</h1><hr>
-              <h1 style="font-size:600%;">0</h1>
+              <h1>About</h1><hr>
+              <form id="aboutForm">
+                <input type="hidden" name="name" value="about">
+                <textarea class="form-control" id="aboutText" form="aboutForm" name="content" rows=6></textarea><br>
+                <input type="submit" class="btn btn-primary">
+              </form>
             </div>
             <div class="col-md-4 content">
-              <h1>Users this month</h1><hr>
-              <h1 style="font-size:600%;">0</h1>
+              <h1>Underground Time</h1><hr>
+              <form>
+                <input type="hidden" name="name" value="undergroundTime">
+                <input type="textbox" name="content" class="form-control" id="undergroundTime"><br>
+                <input type="submit" class="btn btn-primary">
+              </form>
             </div>
             <div class="col-md-4 content">
-              <h1>Active Users</h1><hr>
-              <h1 style="font-size:600%;">0</h1>
+              <h1>Small Groups</h1><hr>
+              <table id="smallGroups" style="width:100%">
+
+              </table>
             </div>
           </div>
         </div>

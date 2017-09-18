@@ -8,6 +8,12 @@ div.nav2{
     background-color:#492f92;
     height:auto;
 }
+div.custFoot{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+}
 div.footer{
     background-color:#492f92;
     padding:8px;

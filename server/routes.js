@@ -80,6 +80,7 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
             }
             else{
               db.close();
+              setTimeout(function(){globVar.active=false;},((1000*60))*120)
               res.send("success");
             }
           });
@@ -138,6 +139,20 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
       MongoClient.connect(url,function(err,db){
           var board=db.collection("board");
           board.find().toArray(function(err,item){
+            if(err){
+              console.err(err);
+              res.send("error: check logs");
+            }
+            db.close();
+            res.json(item[0]);
+        });
+      });
+    });
+
+    app.get('/getInfo',function(req, res) {
+      MongoClient.connect(url,function(err,db){
+          var collection=db.collection("about");
+          collection.find().toArray(function(err,item){
             if(err){
               console.err(err);
               res.send("error: check logs");

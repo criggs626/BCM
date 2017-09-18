@@ -34,6 +34,16 @@ $.get("/getMembers",function(data){
   $("#treasurerEmail").val(data.treasurer.email);
 });
 
+$.get("/getInfo",function(data){
+  $("#aboutText").text(data.about);
+  $("#undergroundTime").val(data.undergroundTime);
+  var display="";
+  for(i=0;i<data.smallGroups.length;i++){
+    display+="<tr><td><input type=\"textbox\" class=\"form-control\" value=\""+data.smallGroups[i]+"\"></td><td><button class=\"btn btn-danger\">X</button></td></tr>";
+  }
+  $("#smallGroups").html(display);
+});
+
 function addOption(tableID,name){
   if(name=="questionText"){
     $(tableID).append("<tr><td><textarea class=\"form-control "+name+"\" placeholder=\"Enter question Here\"></textarea></td><td><button class=\"btn btn-danger\">X</button></td></tr>")
