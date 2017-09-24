@@ -6,7 +6,7 @@ Created By: Caleb Riggs
 const DEBUG = true;
 var fs = require('fs');
 var multer=require('multer');
-var globVar={groups:0,students:0,active:false};
+var globVar={groups:0,students:0,date:"",active:false};
 //establish the frontEnd director structure
 
 const ROOT_DIR = "../frontEnd/";
@@ -28,21 +28,67 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
       res.send(globVar.active);
     });
 
-    app.get('/joinDiscussionGroup',function(req, res) {
-      var groupNumber=(globVar.students%globVar.groups);
-      globVar.students+=1;
+    app.post('/joinDiscussionGroup',function(req, res) {
       MongoClient.connect(url,function(err,db){
-        var collection=db.collection("discussion");
-        collection.find({"current":"true"}).toArray(function(err,item){
-          if(err){
-            console.err(err);
-            res.send("error: check logs");
+          var attend=db.collection("attendance");
+          attend.find({"date":globVar.date}).toArray(function(err,item){
+            var attendees=item[0];
+            db.close();
+            if(err){
+              console.err(err);
+              res.send("error: Gonna be honest... not sure why. Have you tried turning it off and on again?");
+            }
+            var found=false;
+            for(var i=0;i<item[0].attendees.length;i++){
+              if(req.body.id==item[0].attendees[i].id){
+                found=true;
+                break;
+              }
+            }
+            if (found) {
+              MongoClient.connect(url,function(err,db){
+                var discussion=db.collection("discussion");
+                discussion.find({"current":"true"}).toArray(function(err,item){
+                  if(err){
+                       console.error(err);
+                       res.send("error: Gonna be honest... not sure why. Have you tried turning it off and on again?");
+                  }
+                  db.close();
+                  var temp=item[0];
+                  delete temp._id;
+                  temp["groupNumber"]=attendees.attendees[i].groupNumber;
+                  res.json(temp);
+                });
+              });
+            }
+            else{
+              var groupNumber=(globVar.students%globVar.groups);
+              globVar.students+=1;
+              MongoClient.connect(url,function(err,db){
+              var attendance = db.collection("attendance");
+              attendance.update({"date":globVar.date},{$push:{"attendees":{$each:[{"id":req.body.id,"groupNumber":groupNumber}]}}},function(err,result){
+                if(err) {
+                console.error(err);
+                db.close()
+                res.send("error: Gonna be honest... not sure why. Have you tried turning it off and on again?")
+                }
+                else{
+                  var discussion=db.collection("discussion");
+                  discussion.find({"current":"true"}).toArray(function(err,item){
+                    if(err){
+                    console.err(err);
+                    res.send("error: Gonna be honest... not sure why. Have you tried turning it off and on again?");
+                    }
+                    db.close();
+                    var temp=item[0];
+                    delete temp._id;
+                    temp["groupNumber"]=groupNumber;
+                    res.json(temp);
+                  });
+                }
+              });
+            });
           }
-          db.close();
-          var temp=item[0];
-          delete temp._id;
-          temp["groupNumber"]=groupNumber;
-          res.json(temp);
         });
       });
     });
@@ -68,11 +114,15 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
       globVar.groups=req.body.values.number;
       globVar.students=0;
       globVar.active=true;
+      date = new Date();
+      globVar.date=(date.getMonth()+1)+"/"+date.getDate()+"/"+date.getFullYear();
       MongoClient.connect(url,function(err,db){
-        var collection=db.collection("discussion");
-        collection.update({"current":"true" },{$set:{"current":"false"}}, function (err, item) {
+        var attendance=db.collection("attendance");
+        attendance.insert({"date":globVar.date,"attendees":[]})
+        var discussion=db.collection("discussion");
+        discussion.update({"current":"true" },{$set:{"current":"false"}}, function (err, item) {
           console.log("Begin updating dsicussion info");
-          collection.insertOne(req.body.values,function(err,result){
+          discussion.insertOne(req.body.values,function(err,result){
             if(err){
               console.error(err);
               db.close();
