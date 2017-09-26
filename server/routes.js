@@ -39,8 +39,8 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
               res.send("error: Gonna be honest... not sure why. Have you tried turning it off and on again?");
             }
             var found=false;
-            for(var i=0;i<item[0].attendees.length;i++){
-              if(req.body.id==item[0].attendees[i].id){
+            for(var i=0;i<attendees.discussionAttendees.length;i++){
+              if(req.body.id==attendees.discussionAttendees[i].id){
                 found=true;
                 break;
               }
@@ -56,7 +56,7 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
                   db.close();
                   var temp=item[0];
                   delete temp._id;
-                  temp["groupNumber"]=attendees.attendees[i].groupNumber;
+                  temp["groupNumber"]=attendees.discussionAttendees[i].groupNumber;
                   res.json(temp);
                 });
               });
@@ -66,7 +66,7 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
               globVar.students+=1;
               MongoClient.connect(url,function(err,db){
               var attendance = db.collection("attendance");
-              attendance.update({"date":globVar.date},{$push:{"attendees":{$each:[{"id":req.body.id,"groupNumber":groupNumber}]}}},function(err,result){
+              attendance.update({"date":globVar.date},{$push:{"discussionAttendees":{$each:[{"id":req.body.id,"groupNumber":groupNumber}]}}},function(err,result){
                 if(err) {
                 console.error(err);
                 db.close()
@@ -85,6 +85,45 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
                     temp["groupNumber"]=groupNumber;
                     res.json(temp);
                   });
+                }
+              });
+            });
+          }
+        });
+      });
+    });
+
+    app.post('/attendBCM',function(req, res) {
+      MongoClient.connect(url,function(err,db){
+          var attend=db.collection("attendance");
+          attend.find({"date":globVar.date}).toArray(function(err,item){
+            var attendees=item[0];
+            db.close();
+            if(err){
+              console.err(err);
+              res.send("error: Gonna be honest... not sure why. Have you tried turning it off and on again?");
+            }
+            var found=false;
+            for(var i=0;i<item[0].attendees.length;i++){
+              if(req.body.id==item[0].attendees[i].id){
+                found=true;
+                break;
+              }
+            }
+            if (found) {
+              res.send("You have already marked attendance, thank you for attending!")
+            }
+            else{
+              MongoClient.connect(url,function(err,db){
+              var attendance = db.collection("attendance");
+              attendance.update({"date":globVar.date},{$push:{"attendees":{$each:[{"id":req.body.id,"groupNumber":""}]}}},function(err,result){
+                if(err) {
+                  console.error(err);
+                  db.close()
+                  res.send("error: Gonna be honest... not sure why. Have you tried turning it off and on again?")
+                }
+                else{
+                  res.send("Thank you for attending!");
                 }
               });
             });
@@ -118,7 +157,7 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
       globVar.date=(date.getMonth()+1)+"/"+date.getDate()+"/"+date.getFullYear();
       MongoClient.connect(url,function(err,db){
         var attendance=db.collection("attendance");
-        attendance.insert({"date":globVar.date,"attendees":[]})
+        attendance.insert({"date":globVar.date,"discussionAttendees":[],"attendees":[]})
         var discussion=db.collection("discussion");
         discussion.update({"current":"true" },{$set:{"current":"false"}}, function (err, item) {
           console.log("Begin updating dsicussion info");

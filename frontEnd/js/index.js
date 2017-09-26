@@ -18,22 +18,41 @@ $(window).resize(function () {
 
 $.get("/getDiscussionStatus",function(data){
   if(data){
-    $("#discussionMessage").text("Click below to receive your group number and questions");
+    $("#discussionMessage").text("Enter student ID or email then click the correct button to either join a group or just attend.");
     $("#discussionButton").removeClass("disabled");
+    $("#attendanceInput").show();
+    $("#attendanceButton").removeClass("disabled");
     $("#discussionButton").attr("onclick","discussionButton()");
+    $("#attendanceButton").attr("onclick","attendanceButton()");
   }
 });
 
 function discussionButton(){
-  $.get("/joinDiscussionGroup",function(data){
-    var display="<div class=\"row\"><div class=\"col-md-12 contentAuto\"><h1>Group #"+(data.groupNumber+1)+"</h1><hr><h3>"+data.groups[parseInt(data.groupNumber)]+"</h3></div></div>";
-    for(i=0;i<data.questions.length;i++){
-      display+="<div class=\"row\"><div class=\"col-md-12 contentAuto\"><h2>Question #"+(i+1)+"</h2><hr>"+data.questions[i]+"</div></div>";
-    }
-    $("#discussionGroups").html(display);
-    updateFooter();
-  });
-};
+  if($("#discussionId").val()){
+    $.post("/joinDiscussionGroup",{"id":$("#discussionId").val()},function(data){
+      var display="<div class=\"row\"><div class=\"col-md-12 contentAuto\"><h1>Group #"+(data.groupNumber+1)+"</h1><hr><h3>"+data.groups[parseInt(data.groupNumber)]+"</h3></div></div>";
+      for(i=0;i<data.questions.length;i++){
+        display+="<div class=\"row\"><div class=\"col-md-12 contentAuto\"><h2>Question #"+(i+1)+"</h2><hr>"+data.questions[i]+"</div></div>";
+      }
+      $("#discussionGroups").html(display);
+      updateFooter();
+    });
+  }
+  else{
+    alert("No data entered")
+  }
+}
+function attendanceButton(){
+  if($("#discussionId").val()){
+    $.post("/attendBCM",{"id":$("#discussionId").val()},function(data){
+      $("#discussionGroups").html("<div class=\"row\"><div class=\"col-md-12 contentAuto\"><h1>"+data+"</h1></div></div>");
+      updateFooter();
+    });
+  }
+  else{
+    alert("No data entered")
+  }
+}
 
 $.get("/getMembers",function(data){
   $("#directorName").text(data.director.name);
