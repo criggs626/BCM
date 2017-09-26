@@ -3,7 +3,7 @@ to update the database.
 Created By: Caleb Riggs
 */
 
-const DEBUG = true;
+const DEBUG = false;
 var fs = require('fs');
 var multer=require('multer');
 var globVar={groups:0,students:0,date:"",active:false};
