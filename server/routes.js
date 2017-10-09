@@ -6,7 +6,7 @@ Created By: Caleb Riggs
 const DEBUG = false;
 var fs = require('fs');
 var multer=require('multer');
-var globVar={groups:0,students:0,date:"",active:false};
+var globVar={groups:0,students:0,date:"10/8/2017",active:false,questions:[]};
 //establish the frontEnd director structure
 
 const ROOT_DIR = "../frontEnd/";
@@ -96,10 +96,11 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
     app.post('/attendBCM',function(req, res) {
       MongoClient.connect(url,function(err,db){
           var attend=db.collection("attendance");
+          var discussion = db.collection("discussion");
           attend.find({"date":globVar.date}).toArray(function(err,item){
             var attendees=item[0];
-            db.close();
             if(err){
+              db.close();
               console.err(err);
               res.send("error: Gonna be honest... not sure why. Have you tried turning it off and on again?");
             }
@@ -111,23 +112,60 @@ module.exports = function (app, passport, express, MongoClient,url,mongo,md5) {
               }
             }
             if (found) {
-              res.send("You have already marked attendance, thank you for attending!")
+              discussion.find({"current":"true"}).toArray(function(err,item){
+                if(err){
+                  db.close();
+                  console.err(err);
+                  res.send("error: Gonna be honest... not sure why. Have you tried turning it off and on again?");
+                }
+                db.close();
+                var temp=item[0];
+                delete temp._id;
+                res.json(temp);
+              });
             }
             else{
-              MongoClient.connect(url,function(err,db){
-              var attendance = db.collection("attendance");
-              attendance.update({"date":globVar.date},{$push:{"attendees":{$each:[{"id":req.body.id,"groupNumber":""}]}}},function(err,result){
+              attend.update({"date":globVar.date},{$push:{"attendees":{$each:[{"id":req.body.id,"groupNumber":""}]}}},function(err,result){
                 if(err) {
                   console.error(err);
-                  db.close()
+                  db.close();
                   res.send("error: Gonna be honest... not sure why. Have you tried turning it off and on again?")
                 }
                 else{
-                  res.send("Thank you for attending!");
+                  discussion.find({"current":"true"}).toArray(function(err,item){
+                    if(err){
+                      console.err(err);
+                      res.send("error: Gonna be honest... not sure why. Have you tried turning it off and on again?");
+                    }
+                    db.close();
+                    var temp=item[0];
+                    delete temp._id;
+                    res.json(temp);
+                  });
                 }
               });
-            });
+            }
+        });
+      });
+    });
+
+    app.get("/getAttendance",isLoggedIn,function(req,res){
+      MongoClient.connect(url,function(err,db){
+        var attendance=db.collection("attendance");
+        attendance.find({"date":globVar.date}).toArray(function(err,item){
+          temp=item[0];
+          attend=[];
+          for(i=0;i<temp.discussionAttendees.length;i++){
+            attend.push(temp.discussionAttendees[i]["id"])
           }
+          for(i=0;i<temp.attendees.length;i++){
+            if(attend.indexOf(temp.discussionAttendees[i]["id"])==-1){
+              attend.push(temp.discussionAttendees[i]["id"])
+            }
+          }
+          res.setHeader('Content-disposition', 'attachment; filename=undergroundAttendance.csv');
+          res.set('Content-Type', 'text/csv');
+          res.status(200).send(attend.join("\n"));
         });
       });
     });

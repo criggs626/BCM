@@ -18,7 +18,7 @@ $(window).resize(function () {
 
 $.get("/getDiscussionStatus",function(data){
   if(data){
-    $("#discussionMessage").text("Enter student ID or email then click the correct button to either join a group or just attend.");
+    $("#discussionMessage").html("Enter student ID or email below, then click either join discussion or mark attendance <br>(both will mark attendance)");
     $("#discussionButton").removeClass("disabled");
     $("#attendanceInput").show();
     $("#attendanceButton").removeClass("disabled");
@@ -45,7 +45,16 @@ function discussionButton(){
 function attendanceButton(){
   if($("#discussionId").val()){
     $.post("/attendBCM",{"id":$("#discussionId").val()},function(data){
-      $("#discussionGroups").html("<div class=\"row\"><div class=\"col-md-12 contentAuto\"><h1>"+data+"</h1></div></div>");
+      if(data.questions){
+        var display="<div class=\"row\"><div class=\"col-md-12 contentAuto\"><h1>Thank you for attending</h1></div></div>";
+        for(i=0;i<data.questions.length;i++){
+          display+="<div class=\"row\"><div class=\"col-md-12 contentAuto\"><h2>Question #"+(i+1)+"</h2><hr>"+data.questions[i]+"</div></div>";
+        }
+        $("#discussionGroups").html(display);
+      }
+      else{
+        $("#discussionGroups").html("<div class=\"row\"><div class=\"col-md-12 contentAuto\"><h1>Thank you for attending here are the questions from the discussion groups</h1></div></div>");
+      }
       updateFooter();
     });
   }
@@ -95,9 +104,7 @@ function updateFooter(){
   }
 }
 
-$(window).resize(function() {
-  updateFooter();
-});
+setInterval(updateFooter,500);
 
 var routes = Backbone.Router.extend({
     routes: {
