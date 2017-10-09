@@ -6,7 +6,7 @@ Created By: Caleb Riggs
 const DEBUG = false;
 var fs = require('fs');
 var multer=require('multer');
-var globVar={groups:0,students:0,date:"10/8/2017",active:false,questions:[]};
+var globVar={groups:0,students:0,date:"",active:false,questions:[]};
 //establish the frontEnd director structure
 
 const ROOT_DIR = "../frontEnd/";
